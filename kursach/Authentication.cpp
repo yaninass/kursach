@@ -41,7 +41,9 @@ void Authentication::registerUser() {
 	cout << "Регистрация прошла успешно" << endl;
 	Sleep(2000);
 	system("cls");
-	menu_user();
+	cout <<
+		"Добро пожаловать, " << newUser.getSurname() << " " << newUser.getName() << " " << newUser.getPatronymic() << "!" << endl;
+	menu_user(newUser);
 
 }
 void Authentication::registerAdmin()
@@ -96,9 +98,11 @@ void Authentication::loginUser() {
 			}
 		}
 		cout << endl;
-
-		if (checkCredentialsUser(login, password)) {
-			currentUser.SetLogin(login);
+		User currentUser;
+		if (checkCredentialsUser(login, password,currentUser)) {
+			cout << "Вход выполнен успешно!"<<endl<<
+				"Добро пожаловать, " << currentUser.getSurname() << " " << currentUser.getName() << " " << currentUser.getPatronymic() << "!" << endl;
+			menu_user(currentUser);
 			break;
 		}
 		else {
@@ -260,22 +264,20 @@ void Authentication::menu_admin()
 		}
 	}
 }
-void Authentication::menu_user()
+void Authentication::menu_user(User& currentUser)
 {
 	while (1)
 	{
 		Visitor visitor;
-	
-		cout << "Добро пожаловать, " << currentUser.getLogin();
 		cout << "МЕНЮ ПОЛЬЗОВАТЕЛЯ" << endl;
 		int choice;
 		cout << "\n Введите: " << endl;
 		cout << "1 - чтобы просмотреть расписание" << endl;
-		cout << "2 - для просмотра доступных билетов" << endl;
-		cout << "3 - для покупки билетов" << endl;
-		cout << "4 - для просмотра купленных билетов" << endl;
-		cout << "5 - для поиска билета" << endl;
-		cout << "6 - для сортировки билетов" << endl;
+		cout << "2 - для просмотра услуг,предоставляемых аэропортом" << endl;
+		cout << "3 - для оформления услуг" << endl;
+		cout << "4 - для просмотра оформленных услуг" << endl;
+		cout << "5 - для поиска услуг" << endl;
+		cout << "6 - для сортировки услуги" << endl;
 		cout << "7 - для выхода" << endl;
 		cout << "Ваш выбор: ";
 		cin >> choice;
@@ -286,20 +288,26 @@ void Authentication::menu_user()
 		}
 		case 2: {
 			system("cls");
-
+			cout << "--УСЛУГИ ПРЕДОСТАВЛЯЕМЫЕ АЭРОПОРТОМ---" << endl;
+			vector<shared_ptr<PayService>> PayServices = visitor.readPayServiceFromFIle();
+			visitor.printPayServiceTable(PayServices);
 			break;
 		}
 		case 3: {
+			cout << "---ОФОРМЛЕНИЕ УСЛУГ---" << endl;
 			break;
 		}
 		case 4: {
+			cout << "---ПРОСМОТР ОФОРМЛЕННЫХ УСЛУГ---" << endl;
 			break;
 		}
 		case 5:
-		{
+		{cout << "---ПОИСК УСЛУГ---" << endl;
+			currentUser.findPayService();
 			break;
 		}
 		case 6: {
+			currentUser.sortPayService();
 			break;
 		}
 		case 7: {
@@ -486,12 +494,16 @@ vector<Account> Authentication::readFromFileAccountsAdmins()
 	}
 	return accounts_admins;
 }
-bool Authentication::checkCredentialsUser(const std::string& login, const std::string& password) {
+bool Authentication::checkCredentialsUser(const std::string& login, const std::string& password,User& currentUser) {
 	accounts_user = readFromFileAccountsUser();
+	users = readFromFileUsers();
 	//CaesarCipher<int> chifer(3);
-	for ( auto& account : accounts_user) {
+	for ( auto& account : users) {
 		if (account.getLogin() == login && account.getPassword() == password) {
-			menu_user();
+			currentUser.setSurname(account.getSurname());
+			currentUser.setName(account.getName());
+			currentUser.setPatronymic(account.getPatronymic());
+			
 			return true;  // Найден пользователь с таким логином и паролем
 		}
 	}

@@ -95,7 +95,7 @@ void Admin::menu_workwithdata()
 		int choice;
 		cout << "\n Введите: " << endl;
 		cout << "1 - для работы с расписанием" << endl;
-		cout << "2 - для работы с билетами" << endl;
+		cout << "2 - для работы с услугами" << endl;
 		cout << "3 - для выхода" << endl;
 		cout << "Ваш выбор: ";
 		cin >> choice;
@@ -106,7 +106,7 @@ void Admin::menu_workwithdata()
 			break;
 		}
 		case 2: {
-			cout << "Работа с билетами" << endl;
+			cout << "Работа с услугами" << endl;
 			break;
 		}
 		case 3: {

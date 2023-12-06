@@ -125,6 +125,7 @@ void Visitor::printArrivalSchedule(vector<ArrivalSchedule>& ArrivalFlights)
 	}
 }
 
+
 void Admin::writeDepartureFlightstoFile(vector<DepartureSchedule> DepartureFlights)
 {
 	string filename = "departureschedule.txt";

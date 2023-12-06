@@ -10,6 +10,43 @@
 #include <conio.h>
 #include<memory>
 using namespace std;
+class Service {
+protected:
+	string name;
+	char availability;
+public:
+	virtual void show(int i) = 0;
+	string getName() {
+		return name;
+	}
+	void setName(string newName) {
+		name = newName;
+	}
+	char getavailibility() {
+		return availability;
+	}
+	void setavailability(char newAvalibility) {
+		availability = newAvalibility;
+	}
+
+	Service( string name, char availability)
+		: name(name), availability(availability)
+	{
+	}
+};
+class PayService : public Service {
+	double Cost;
+
+public:
+	double getCost() { return Cost; }
+	void setCost(double newCost) { Cost = newCost; }
+	void show(int i) override;
+
+	PayService(std:: string name, char availability,double Cost): Service(name, availability)
+	{
+		this->Cost = Cost;
+	}
+};
 class Flight {
 
 public:
@@ -53,7 +90,6 @@ public:
 	}
 };
 class  Schedule {
-
 public:
 	vector<Flight> flights;
 	friend istream& operator>>(istream& is, Schedule& schedule) {
@@ -128,16 +164,20 @@ public:
 	}
 };
 namespace role {
+	
 	class Visitor {
 	protected:
 		vector<DepartureSchedule> DepartureFlights;
 		vector<ArrivalSchedule> ArrivalFlights;
+		vector<shared_ptr<PayService>> PayServices;
 	public:
 		void menu_schedule();
 		vector<DepartureSchedule> readDepartureSchedulefromFile();
 		vector<ArrivalSchedule> readArrivalSchedulefromFile();
 		void printDepartureSchedule(vector<DepartureSchedule>& DepartureFlights);
 		void printArrivalSchedule(vector<ArrivalSchedule>& ArrivalFlights);
+		vector<shared_ptr<PayService>> readPayServiceFromFIle();
+		void printPayServiceTable(vector<shared_ptr<PayService>>& PayServices);
 	};
 	class Account {
 	protected:
@@ -190,6 +230,9 @@ namespace role {
 		User(string login, string password, string surname, string name, string patronymic, int identNumber) :Account(login, password) {
 			this->surname = surname; this->name = name; this->patronymic = patronymic; this->identNumber = identNumber;
 		}
+		void findPayService();
+		static bool compareByCost(shared_ptr<PayService>& a, shared_ptr<PayService>& b);
+		void sortPayService();
 	};
 	class Admin : public virtual Visitor, public Account {
 		int numberAdmin;
@@ -205,16 +248,18 @@ namespace role {
 		}
 		void writeDepartureFlightstoFile(vector<DepartureSchedule> DepartureFlights);
 		void writeArrivalFlightstoFile(vector<ArrivalSchedule> ArrivalFlights);
-		void writePayServiceToFile(vector<PayService>& services);
+		void writePayServiceToFile(vector<shared_ptr<PayService>> PayServices);
 		void addDepartureFlight();
 		void addArrivalFlight();
+		void addPayService();
 		void menu_workwithdata();
 		void menu_workwithschedule();
 		void editDepartureFlight();
 		void editArrivalFlight();
 		void deleteDepartureFlight();
 		void deleteArrivalFlight();
-
+		void deletePayService();
+		void editPayService();
 	};
 
 	class Authentication {
@@ -236,7 +281,7 @@ namespace role {
 		void saveToFileAccountAdmins(vector<Account>& accounts_admin);//запись в файл аккаунтов админов
 		vector<Admin> readFromFileAdmins();//чтение из файла данных администраторов
 		vector<Account> readFromFileAccountsAdmins();//чтение из файла аккаунтов админов
-		bool checkCredentialsUser(const string& login, const string& password);
+		bool checkCredentialsUser(const string& login, const string& password,User& currentUser);
 		bool checkCredentialsAdmin(string& login, string& password);
 		bool checkLoginAndPasswordRegist(std::vector<Account>& accounts_user, std::string login, std::string password);
 		Admin getAdminByLogin(string& login);
@@ -254,7 +299,7 @@ namespace role {
 		void menu_registration();
 		void menu_login();
 		void menu_admin();
-		void menu_user();
+		void menu_user(User& currentUser);
 		void approve();
 		void printAdminAccountTable(vector<Account>& accounts_admin);
 		void printUserAccountTable(vector<Account>& accounts_user);
@@ -296,23 +341,9 @@ public:
 				ch = static_cast<char>((ch - base - shift + 36) % 36 + base);
 			}
 		}
+	
 
 		return decryptedPassword;
 	}
-};
-class Service {
-	string name;
-	char availability;
-public:
-	virtual void show() = 0;
-	string getName() {
-		return name;
-	}
-	
-};
-class PayService {
-	double Cost;
-public:
-	void show();
 };
 
