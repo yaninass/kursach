@@ -2,8 +2,9 @@
 using namespace role;
 void Visitor:: menu_schedule()
 {
+	system("cls");
 	while (1) {
-		//system("cls");
+		
 		int choice;
 		vector<DepartureSchedule> DepartureFlights = readDepartureSchedulefromFile();
 		vector<ArrivalSchedule> ArrivalFlights = readArrivalSchedulefromFile();
@@ -12,18 +13,15 @@ void Visitor:: menu_schedule()
 		switch (choice) {
 		case 1: {
 			cout << "Расписание вылетов" << endl;
-			//cout << "Size of DepartureFlights: " << DepartureFlights.size() << endl;
 			printDepartureSchedule(DepartureFlights);
 			break;
 		}
 		case 2: {
-		//	system("cls");
 			cout << "Расписание посадок" << endl;
 			printArrivalSchedule(ArrivalFlights);
 			break;
 		}
 		case 3: {
-		
 			return;
 		}
 		}
@@ -43,8 +41,8 @@ vector<DepartureSchedule> Visitor::readDepartureSchedulefromFile()
 			Flight flight{ numberFlight, day,month,year, Destination, status, time };
 			DepartureSchedule depshed;
 			depshed.flights.push_back(flight);
-			depshed.ReceptionDesk = ReceptionDesk;
-			depshed.DepartureGate = DepartureGate;
+			depshed.setReceptionGate(ReceptionDesk);
+			depshed.setDepartureGate(DepartureGate);
 
 			DepartureFlights.push_back(depshed);
 		}
@@ -70,7 +68,7 @@ vector<ArrivalSchedule> Visitor::readArrivalSchedulefromFile()
 			Flight flight{ numberFlight, day,month,year, Destination, status, time };
 			ArrivalSchedule arrshed;
 			arrshed.flights.push_back(flight);
-			arrshed.LuggageBelt = LuggageBelt;
+			arrshed.setLuggageBelt(LuggageBelt);
 			ArrivalFlights.push_back(arrshed);
 		}
 
@@ -95,10 +93,10 @@ system("cls");
 
 	int i = 0;
 	for (auto& departureflight : DepartureFlights) {
-		for (const Flight& flight : departureflight.flights) {
-			cout << "|" << left <<setw(3) << ++i << "|" << setw(6) << flight.numberFlight << "|" << setw(4)<<right << flight.day<<"."<<flight.month<<"."<<flight.year << "|"
-				<< setw(17) << flight.Destination << "|" << setw(16) << flight.status << "|" <<setw(5)<<flight.time<<"|" << setw(18) << departureflight.ReceptionDesk <<
-				"|" << setw(16) << departureflight.DepartureGate << "|" << endl;
+		for ( Flight& flight : departureflight.flights) {
+			cout << "|" << left <<setw(3) << ++i << "|" << setw(6) << flight.GetnumberFlight() << "|" << setw(4)<<right << flight.Getday()<<"."<<flight.Getmonth()<<"."<<flight.Getyear() << "|"
+				<< setw(17) << flight.GetDestination() << "|" << setw(16) << flight.Getstatus() << "|" <<setw(5)<<flight.Gettime()<<"|" << setw(18) << departureflight.getReceptionDesk()<<
+				"|" << setw(16) << departureflight.getDepartureGate() << "|" << endl;
 			cout << "------------------------------------------------------------------------------------------------------" << endl;
 		}
 	}
@@ -116,9 +114,9 @@ void Visitor::printArrivalSchedule(vector<ArrivalSchedule>& ArrivalFlights)
 
 	int i = 0;
 	for (auto& arrivalflight : ArrivalFlights) {
-		for (const Flight& flight : arrivalflight.flights) {
-			cout << "|" << left << setw(3) << ++i << "|" << setw(6) << flight.numberFlight << "|" << setw(4) << right << flight.day << "." << flight.month << "." << flight.year << "|"
-				<< setw(17) << flight.Destination << "|" << setw(16) << flight.status << "|" << setw(5) << flight.time << "|" << setw(15) << arrivalflight.LuggageBelt <<
+		for ( Flight& flight : arrivalflight.flights) {
+			cout << "|" << left << setw(3) << ++i << "|" << setw(6) << flight.GetnumberFlight() << "|" << setw(4) << right << flight.Getday() << "." << flight.Getmonth() << "." << flight.Getyear() << "|"
+				<< setw(17) << flight.GetDestination() << "|" << setw(16) << flight.Getstatus() << "|" << setw(5) << flight.Gettime() << "|" << setw(15) << arrivalflight.getLuggageBelt() <<
 				"|"  << endl;
 			cout << "----------------------------------------------------------------------------------" << endl;
 		}
@@ -138,7 +136,7 @@ void Admin::writeDepartureFlightstoFile(vector<DepartureSchedule> DepartureFligh
 		for (Flight& flight : depshed.flights) {
 			outputFile << flight << " ";
 		}
-		outputFile << depshed.getReceptionDesk() << " " << depshed.DepartureGate << " ";
+		outputFile << depshed.getReceptionDesk() << " " << depshed.getDepartureGate() << " ";
 	}
 	outputFile.close();
 }
@@ -155,7 +153,7 @@ void Admin::writeArrivalFlightstoFile(vector<ArrivalSchedule> ArrivalFlights)
 		for (Flight& flight : arrshed.flights) {
 			outputFile << flight << " ";
 		}
-		outputFile << arrshed.LuggageBelt << " ";
+		outputFile << arrshed.getLuggageBelt() << " ";
 	}
 	outputFile.close();
 }
@@ -191,8 +189,8 @@ void Admin::addDepartureFlight()
 	DepartureSchedule DepartureFlight;
 	Flight newflight{ numberFlight, day,month,year, Destination, status, time };
 	DepartureFlight.flights.push_back(newflight);
-	DepartureFlight.ReceptionDesk = ReceptionDesk;
-	DepartureFlight.DepartureGate = DepartureGate;
+	DepartureFlight.setReceptionGate( ReceptionDesk);
+	DepartureFlight.setDepartureGate( DepartureGate);
 
 	vector<DepartureSchedule> departureFlights = readDepartureSchedulefromFile();
 	departureFlights.push_back(DepartureFlight);
@@ -231,7 +229,7 @@ void Admin::addArrivalFlight()
 	ArrivalSchedule ArrivalFlight;
 	Flight newflight{ numberFlight, day,month,year, Destination, status, time };
 	ArrivalFlight.flights.push_back(newflight);
-	ArrivalFlight.LuggageBelt = LaggageBelt;
+	ArrivalFlight.setLuggageBelt(LaggageBelt);
 	vector<ArrivalSchedule> arrivalFlights = readArrivalSchedulefromFile();
 	arrivalFlights.push_back(ArrivalFlight);
 	writeArrivalFlightstoFile(arrivalFlights);
@@ -265,17 +263,24 @@ void Admin::editDepartureFlight() {
 			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
+			int day, month, year;
 			for (size_t i = 0; i < departureFlights.at(departureIndex).flights.size(); ++i) {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новый день: ";
-					cin >> departureFlights.at(departureIndex).flights.at(i).day;
+					cin >> day;
+					
 					cout << setw(5) << "Новый месяц: ";
-					cin >> departureFlights.at(departureIndex).flights.at(i).month;
+					cin >> month;
+					
 					cout << setw(5) << "Новый год: ";
-					cin >> departureFlights.at(departureIndex).flights.at(i).year;
-
+					cin >> year;
+					
 					found = true;
+					departureFlights.at(departureIndex).flights.at(i).setDay(day);
+					departureFlights.at(departureIndex).flights.at(i).setMonth(month);
+					departureFlights.at(departureIndex).flights.at(i).setYear(year);
+
 					break;
 				}
 			}
@@ -299,11 +304,13 @@ void Admin::editDepartureFlight() {
 			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
+			string destination;
 			for (size_t i = 0; i < departureFlights.at(departureIndex).flights.size(); ++i) {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новый пункт прибытия: ";
-					cin >> departureFlights.at(departureIndex).flights.at(i).Destination;
+					cin >> destination;
+						departureFlights.at(departureIndex).flights.at(i).setDestination(destination);
 					
 					found = true;
 					break;
@@ -327,11 +334,13 @@ void Admin::editDepartureFlight() {
 			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
+			string status;
 			for (size_t i = 0; i < departureFlights.at(departureIndex).flights.size(); ++i) {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новый статус: ";
-					cin >> departureFlights.at(departureIndex).flights.at(i).status;
+					cin >> status;
+					departureFlights.at(departureIndex).flights.at(i).setStatus(status);
 					found = true;
 					break;
 				}
@@ -355,11 +364,13 @@ void Admin::editDepartureFlight() {
 			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
+			string time;
 			for (size_t i = 0; i < departureFlights.at(departureIndex).flights.size(); ++i) {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новое время вылета: ";
-					cin >> departureFlights.at(departureIndex).flights.at(i).time;
+					cin >> time;
+					departureFlights.at(departureIndex).flights.at(i).setTime(time);
 					found = true;
 					break;
 				}
@@ -377,6 +388,7 @@ void Admin::editDepartureFlight() {
 		case 5: {
 			cout << "--Изменение стойку регистрации и выход на посадку--" << endl;
 			int targetFlightNumber;
+			string ReceptionDesk, DepartureGate;
 			cout << "Введите номер рейса, для которого хотите изменить стойку регистрации и выход на посадку: ";
 			cin >> targetFlightNumber;
 			// Поиск рейса по номеру в векторе flights
@@ -386,9 +398,11 @@ void Admin::editDepartureFlight() {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новая стойка регистрации: ";
-					cin >> departureFlights.at(departureIndex).ReceptionDesk;
+					cin >> ReceptionDesk;
+					departureFlights.at(departureIndex).setReceptionGate(ReceptionDesk);
 					cout << setw(5) << "Новый выход на посадку : ";
-					cin >> departureFlights.at(departureIndex).DepartureGate;
+					cin >>DepartureGate;
+					departureFlights.at(departureIndex).setDepartureGate(DepartureGate);
 					found = true;
 					break;
 				}
@@ -436,17 +450,20 @@ void Admin::editArrivalFlight()
 		cin >> targetFlightNumber;
 		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
+		int day, month, year;
 		bool found = false;
 		for (size_t i = 0; i < arrivalFlights.at(arrivalIndex).flights.size(); ++i) {
 			if (arrivalFlights.at(arrivalIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новый день: ";
-				cin >> arrivalFlights.at(arrivalIndex).flights.at(i).day;
+				cin >> day;
+				arrivalFlights.at(arrivalIndex).flights.at(i).setDay(day);
 				cout << setw(5) << "Новый месяц: ";
-				cin >> arrivalFlights.at(arrivalIndex).flights.at(i).month;
+				cin >> month;
+				arrivalFlights.at(arrivalIndex).flights.at(i).setMonth(month);
 				cout << setw(5) << "Новый год: ";
-				cin >> arrivalFlights.at(arrivalIndex).flights.at(i).year;
-
+				cin >> year;
+				arrivalFlights.at(arrivalIndex).flights.at(i).setYear(year);
 				found = true;
 				break;
 			}
@@ -471,11 +488,13 @@ void Admin::editArrivalFlight()
 		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
 		bool found = false;
+		string destination;
 		for (size_t i = 0; i < arrivalFlights.at(arrivalIndex).flights.size(); ++i) {
 			if (arrivalFlights.at(arrivalIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новый пункт вылета: ";
-				cin >> arrivalFlights.at(arrivalIndex).flights.at(i).Destination;
+				cin >> destination;
+					arrivalFlights.at(arrivalIndex).flights.at(i).setDestination(destination);
 
 				found = true;
 				break;
@@ -499,11 +518,13 @@ void Admin::editArrivalFlight()
 		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
 		bool found = false;
+		string status;
 		for (size_t i = 0; i < arrivalFlights.at(arrivalIndex).flights.size(); ++i) {
 			if (arrivalFlights.at(arrivalIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новый статус: ";
-				cin >> arrivalFlights.at(arrivalIndex).flights.at(i).status;
+				cin >> status;
+					arrivalFlights.at(arrivalIndex).flights.at(i).setStatus(status);
 				found = true;
 				break;
 			}
@@ -527,11 +548,13 @@ void Admin::editArrivalFlight()
 		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
 		bool found = false;
+		string time;
 		for (size_t i = 0; i < arrivalFlights.at(arrivalIndex).flights.size(); ++i) {
 			if (arrivalFlights.at(arrivalIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новое время прилёта: ";
-				cin >> arrivalFlights.at(arrivalIndex).flights.at(i).time;
+				cin >> time;
+					arrivalFlights.at(arrivalIndex).flights.at(i).setTime(time);
 				found = true;
 				break;
 			}
@@ -549,6 +572,7 @@ void Admin::editArrivalFlight()
 	case 5: {
 		cout << "--Изменение багажной ленты--" << endl;
 		int targetFlightNumber;
+		string LuggageBelt;
 		cout << "Введите номер рейса, для которого хотите изменить багажную ленту: ";
 		cin >> targetFlightNumber;
 		// Поиск рейса по номеру в векторе flights
@@ -558,7 +582,8 @@ void Admin::editArrivalFlight()
 			if (arrivalFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новая багажная лента: ";
-				cin >> arrivalFlights.at(departureIndex).LuggageBelt;
+				cin >> LuggageBelt;
+				arrivalFlights.at(departureIndex).setLuggageBelt(LuggageBelt);
 				found = true;
 				break;
 			}

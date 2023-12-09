@@ -1,5 +1,4 @@
 #pragma once
-
 #include<iostream>
 #include<Windows.h>
 #include<vector>
@@ -12,15 +11,15 @@
 using namespace std;
 class Service {
 protected:
-	string name;
+	string nameService;
 	char availability;
 public:
 	virtual void show(int i) = 0;
-	string getName() {
-		return name;
+	string getNameService() {
+		return nameService;
 	}
 	void setName(string newName) {
-		name = newName;
+		nameService = newName;
 	}
 	char getavailibility() {
 		return availability;
@@ -28,13 +27,16 @@ public:
 	void setavailability(char newAvalibility) {
 		availability = newAvalibility;
 	}
-
-	Service( string name, char availability)
-		: name(name), availability(availability)
+	Service(string nameService) {
+		this->nameService = nameService;
+	}
+	Service( string nameService, char availability)
+		: nameService(nameService), availability(availability)
 	{
 	}
 };
 class PayService : public Service {
+protected:
 	double Cost;
 
 public:
@@ -42,14 +44,19 @@ public:
 	void setCost(double newCost) { Cost = newCost; }
 	void show(int i) override;
 
-	PayService(std:: string name, char availability,double Cost): Service(name, availability)
+	PayService(std:: string nameService, char availability,double Cost): Service(nameService, availability)
 	{
 		this->Cost = Cost;
 	}
+	PayService(string nameService, double Cost) :Service(nameService) {
+		this->Cost = Cost;
+	}
+	PayService() : Service(""), Cost(0.0) {}
+
 };
 class Flight {
 
-public:
+protected:
 	int numberFlight;
 	int day;
 	int month;
@@ -57,13 +64,35 @@ public:
 	string Destination;
 	string status;
 	string time;
-	int GetnumberFlight() const { return numberFlight; };
-	int Getday() const { return day; };
-	int Getmonth()const { return month; };
-	int Getyear()const { return year; };
-	string GetDestination() const{ return Destination; };
-	string Getstatus() const { return status; };
-	string Gettime() const { return time; };
+public:
+	int GetnumberFlight() { return numberFlight; };
+	void setnumberFlight(int newnumberFlight) {
+		numberFlight = newnumberFlight;
+	}
+	int Getday()  { return day; };
+	void setDay(int newDay) {
+		day = newDay;
+	}
+	int Getmonth() { return month; };
+	void setMonth(int newMonth) {
+		month = newMonth;
+	}
+	int Getyear() { return year; };
+	void setYear(int newYear) {
+		year = newYear;
+	}
+	string GetDestination(){ return Destination; };
+	void setDestination(string newDestinaation) {
+		Destination = newDestinaation;
+	}
+	string Getstatus() { return status; };
+	void setStatus(string newStatus) {
+		status = newStatus;
+	}
+	string Gettime()  { return time; };
+	void setTime(string newtime) {
+		time = newtime;
+	}
 	friend istream& operator>>(istream& is, Flight& flight) {
 		cout << "¬ведите номер рейса: ";
 		is >> flight.numberFlight;
@@ -83,50 +112,53 @@ public:
 		return is;
 	}
 	
-	friend ostream& operator<<(ostream& os, const Flight& flight) {
+	friend ostream& operator<<(ostream& os,  Flight& flight) {
 		os << flight.GetnumberFlight() << " " << flight.Getday() << " "<<flight.Getmonth()<<" "<<flight.Getyear()<<" " << flight.GetDestination()
 			<< " " << flight.Getstatus() << " " << flight.Gettime();
 		return os;
+	}
+
+	Flight(int numberFlight, int day, int month, int year, const string& Destination, const string& status, const string& time)
+		: numberFlight(numberFlight), day(day), month(month), year(year), Destination(Destination), status(status), time(time)
+	{
 	}
 };
 class  Schedule {
 public:
 	vector<Flight> flights;
+	
 	friend istream& operator>>(istream& is, Schedule& schedule) {
 		for (Flight& flight : schedule.flights) {
-			cout << "¬ведите номер рейса: ";
-			is >> flight.numberFlight;
-			cout << "¬ведите дату вылета: ";
-			cout << "¬ведите день вылета: ";
-			is >> flight.day;
-			cout << "¬ведите мес€ц вылета: ";
-			is >> flight.month;
-			cout << "¬ведите год вылета: ";
-			is >> flight.year;
-			cout << "¬ведите пункт: ";
-			is >> flight.Destination;
-			cout << "¬ведите статус рейса: ";
-			is >> flight.status;
-			cout << "¬ведите врем€: ";
-			is >> flight.time;
+			cout << "¬ведите данные дл€ рейса:\n";
+			is >> flight;  // »спользуем перегруженный оператор дл€ Flight
 		}
 		return is;
 	}
+
 	friend ofstream& operator<<(ofstream& of, Schedule& schedule) {
 		for (Flight& flight : schedule.flights) {
-			of << flight.numberFlight << " " << flight.day << " "<<flight.month<<" "<<flight.year<<" " << flight.Destination << " " << flight.status << " " << flight.time << " ";
+			of << flight.GetnumberFlight() << " " << flight.Getday() << " "<<flight.Getmonth()<<" "<<flight.Getyear()<<" " << flight.GetDestination() << " " << flight.Getstatus() << " " << flight.Gettime() << " ";
 		}
 		return of;
 	}
 	
 };
 class DepartureSchedule : public Schedule {
-	
-public:
+protected:
 	string ReceptionDesk;
 	string DepartureGate;
+public:
+	string getDepartureGate() {
+		return DepartureGate;
+	}
 	string getReceptionDesk() {
 		return ReceptionDesk;
+	}
+	void setDepartureGate(string newDepartureGate) {
+		DepartureGate = newDepartureGate;
+	}
+	void setReceptionGate(string newReceptionGate) {
+		ReceptionDesk = newReceptionGate;
 	}
 	friend istream& operator>>(istream& is, DepartureSchedule& departureSchedule) {
 		// ѕерегрузка оператора ввода дл€ DepartureSchedule
@@ -146,9 +178,16 @@ public:
 	
 };
 class ArrivalSchedule : public Schedule {
-	
+protected:
+string LuggageBelt;
 public:
-	string LuggageBelt;
+	
+	string getLuggageBelt() {
+		return LuggageBelt;
+	}
+	void setLuggageBelt(string newLuggageBelt) {
+		LuggageBelt = newLuggageBelt;
+	}
 	friend istream& operator>>(istream& is, ArrivalSchedule& arrivalSchedule) {
 		
 		is >> static_cast<Schedule&>(arrivalSchedule);  // ¬вод расписани€
@@ -178,6 +217,7 @@ namespace role {
 		void printArrivalSchedule(vector<ArrivalSchedule>& ArrivalFlights);
 		vector<shared_ptr<PayService>> readPayServiceFromFIle();
 		void printPayServiceTable(vector<shared_ptr<PayService>>& PayServices);
+		void watchService();
 	};
 	class Account {
 	protected:
@@ -201,6 +241,7 @@ namespace role {
 			os << account.getLogin() << ' ' << account.getPassword();
 			return os;
 		}
+		
 
 	};
 	class User :public virtual  Visitor, public  Account {
@@ -210,6 +251,11 @@ namespace role {
 		string patronymic;
 		int identNumber;
 	public:
+		User(string surname, string name, string patronymic) {
+			this->surname = surname;
+			this->name = name;
+			this->patronymic = patronymic;
+		}
 		string getName()  { return name; }
 		void setName(string newName) {
 			name = newName;
@@ -226,14 +272,17 @@ namespace role {
 		void setIdentNumber(int newIdentNumber) {
 			identNumber = newIdentNumber;
 		}
-		User() = default;
+	    User() = default;
 		User(string login, string password, string surname, string name, string patronymic, int identNumber) :Account(login, password) {
 			this->surname = surname; this->name = name; this->patronymic = patronymic; this->identNumber = identNumber;
 		}
 		void findPayService();
 		static bool compareByCost(shared_ptr<PayService>& a, shared_ptr<PayService>& b);
 		void sortPayService();
+		
+		
 	};
+	
 	class Admin : public virtual Visitor, public Account {
 		int numberAdmin;
 	public:
@@ -254,6 +303,7 @@ namespace role {
 		void addPayService();
 		void menu_workwithdata();
 		void menu_workwithschedule();
+		void menu_workwithservice();
 		void editDepartureFlight();
 		void editArrivalFlight();
 		void deleteDepartureFlight();
@@ -293,11 +343,9 @@ namespace role {
 		void deleteAdminAccount(string login);
 		void registerUser();
 		void registerAdmin();
-		void loginUser();
-		void authorizationAdmin();
+		void authorization();
 		void start_menu();
 		void menu_registration();
-		void menu_login();
 		void menu_admin();
 		void menu_user(User& currentUser);
 		void approve();
@@ -309,6 +357,23 @@ namespace role {
 		void menu_workwithaccount();
 	};
 }
+class DecoratedService {
+	role::User user;
+	PayService payService;
+	vector<DecoratedService> decoratedServices;
+public:
+	DecoratedService(string surname, string name, string patronymic, string nameService, double Cost):user(surname,name,patronymic),payService(nameService,Cost){
+		
+	}
+	void writeDecoratedServicesToFile(vector<DecoratedService>& decoratedServices);
+	vector<DecoratedService> readDecoratedServiceFromFile();
+	void printDecoratedServiceTable(vector<DecoratedService>& decoratedService);
+	void issueService(role::User& currentUser);
+	void deleteDecoratedService();
+	void watchUserDecoratedService(string surname, string name, string patronymic);
+
+	DecoratedService() = default;
+};
 template <typename T>
 class CaesarCipher {
 private:

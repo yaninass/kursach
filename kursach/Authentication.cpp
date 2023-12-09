@@ -73,44 +73,7 @@ void Authentication::registerAdmin()
 	start_menu();
 }
 
-
-void Authentication::loginUser() {
-	std::string login, password;
-	while (1) {
-		password = "";
-		char ch;
-		int i = 0;
-		std::cout << "Введите логин: ";
-		std::cin >> login;
-		std::cout << "Введите пароль: ";
-		while ((ch = _getch()) != '\r') {   // \r - символ Enter
-			if (ch == '\b') {   // \b - символ "backspace"
-				if (i > 0) {
-					cout << "\b \b";   // Отображаем backspace, пробел и еще один backspace
-					i--;
-					password.erase(i, 1);
-				}
-			}
-			else {
-				password.insert(i, 1, ch);
-				i++;
-				cout << '*';
-			}
-		}
-		cout << endl;
-		User currentUser;
-		if (checkCredentialsUser(login, password,currentUser)) {
-			cout << "Вход выполнен успешно!"<<endl<<
-				"Добро пожаловать, " << currentUser.getSurname() << " " << currentUser.getName() << " " << currentUser.getPatronymic() << "!" << endl;
-			menu_user(currentUser);
-			break;
-		}
-		else {
-			std::cout << "Неправильный логин или пароль. Попробуйте снова.\n";
-		}
-	}
-}
-void Authentication::authorizationAdmin()
+void Authentication::authorization()
 {
 	Admin currentAdmin;
 	string login, password;
@@ -140,8 +103,15 @@ void Authentication::authorizationAdmin()
 			currentAdmin.SetLogin(login);
 			break;
 		}
+		else if(checkCredentialsUser(login, password, currentUser)) {
+			system("cls");
+			cout << "Вход выполнен успешно!" << endl <<
+				"Добро пожаловать, " << currentUser.getSurname() << " " << currentUser.getName() << " " << currentUser.getPatronymic() << "!" << endl;
+			menu_user(currentUser);
+			break;
+		}
 		else {
-			std::cout << "Неправильный логин или пароль. Попробуйте снова.\n";
+			cout << "Неправильный логин или пароль. Попробуйте снова.\n";
 		}
 		
 	}
@@ -150,9 +120,12 @@ void Authentication::start_menu()
 {
 	while (1) {
 		system("cls");
+		Visitor visitor;
 		int choice;
-		cout << "-------Введите-------- \n 1-для регистрации \n 2-для авторизации \n 3-просмотреть расписание \n 4-для выхода\n ";
+		cout << "-------Введите-------- \n 1-для регистрации \n 2-для авторизации \n 3-просмотреть расписание \n 4-посмотреть услуги, предоставляемые аэропортом\n 5-для выхода\n ";
+		cout << "Ваш выбор: ";
 		cin >> choice;
+
 		switch (choice) {
 		case 1: {
 			system("cls");
@@ -161,7 +134,7 @@ void Authentication::start_menu()
 		}
 		case 2: {
 			system("cls");
-			menu_login();
+			authorization();
 			break;
 		}
 		case 3: {
@@ -170,10 +143,27 @@ void Authentication::start_menu()
 			break;
 		}
 		case 4: {
+			visitor.watchService();
+			break;
+		}
+		case 5: {
 			return;
 		}
 		}
 
+	}
+}
+void role::Visitor::watchService(){
+	system("cls");
+	User user;
+	cout << "--УСЛУГИ ПРЕДОСТАВЛЯЕМЫЕ АЭРОПОРТОМ---" << endl;
+	vector<shared_ptr<PayService>> PayServices = user.readPayServiceFromFIle();
+	user.printPayServiceTable(PayServices);
+	int choice_exit;
+	cout << endl << "Введите 1 для выхода\n";
+	cin >> choice_exit;
+	if (choice_exit == 1) {
+		return;
 	}
 }
 void Authentication::menu_registration()
@@ -203,40 +193,16 @@ void Authentication::menu_registration()
 
 	}
 }
-void Authentication::menu_login()
-{
-	while (1) {
-		system("cls");
-		int choice;
-		cout << "-------Введите-------- \n 1-для авторизации админа \n 2-для авторизации пользователя \n 3-для выхода \n";
 
-		cin >> choice;
-		switch (choice) {
-		case 1: {
-			system("cls");
-			authorizationAdmin();
-			break;
-		}
-		case 2: {
-			system("cls");
-			loginUser();
-			break;
-		}
-		case 3: {
-			return;
-		}
-		}
-
-	}
-}
 void Authentication::menu_admin()
 {
 	while (1)
 	{
+		system("cls");
 		Admin admin;
 		vector<DepartureSchedule> DepartureFlights = admin.readDepartureSchedulefromFile();
-		cout << endl << "Добро пожаловать, " << currentAdmin.getLogin() << endl;
-		cout << "МЕНЮ АДМИНИСТРАТОРА" << endl;
+		cout  << "Добро пожаловать, " << currentAdmin.getLogin() << endl;
+		cout << "---МЕНЮ АДМИНИСТРАТОРА---" << endl;
 		int choice;
 		cout << "\n Введите: " << endl;
 		cout << "1 - для работы с учётными записями" << endl;
@@ -247,13 +213,13 @@ void Authentication::menu_admin()
 		switch (choice) {
 		case 1: {
 			system("cls");
-			cout << "работа с аккаунтами";
+			cout << "---РАБОТА С УЧЁТНЫМИ ЗАПИСЯМИ---\n";
 			menu_workwithaccount();
 			break;
 		}
 		case 2: {
 			system("cls");
-			cout << "работа с данными";
+			cout << "---РАБОТА С ДАННЫМИ---\n";
 			admin.menu_workwithdata();
 			break;
 		}
@@ -269,7 +235,8 @@ void Authentication::menu_user(User& currentUser)
 	while (1)
 	{
 		Visitor visitor;
-		cout << "МЕНЮ ПОЛЬЗОВАТЕЛЯ" << endl;
+		DecoratedService decorService;
+		cout << "\n---МЕНЮ ПОЛЬЗОВАТЕЛЯ---" << endl;
 		int choice;
 		cout << "\n Введите: " << endl;
 		cout << "1 - чтобы просмотреть расписание" << endl;
@@ -294,15 +261,19 @@ void Authentication::menu_user(User& currentUser)
 			break;
 		}
 		case 3: {
+			system("cls");
 			cout << "---ОФОРМЛЕНИЕ УСЛУГ---" << endl;
+			decorService.issueService(currentUser);
 			break;
 		}
 		case 4: {
 			cout << "---ПРОСМОТР ОФОРМЛЕННЫХ УСЛУГ---" << endl;
+			decorService.watchUserDecoratedService(currentUser.getSurname(), currentUser.getName(), currentUser.getPatronymic());
 			break;
 		}
 		case 5:
-		{cout << "---ПОИСК УСЛУГ---" << endl;
+		{   system("cls");
+			cout << "---ПОИСК УСЛУГ---" << endl;
 			currentUser.findPayService();
 			break;
 		}
@@ -311,6 +282,7 @@ void Authentication::menu_user(User& currentUser)
 			break;
 		}
 		case 7: {
+			system("cls");
 			return;
 
 		}

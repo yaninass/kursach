@@ -9,7 +9,7 @@ void Admin::writePayServiceToFile(vector<shared_ptr<PayService>> PayServices) {
 	}
 	for (shared_ptr<PayService>& servicePtr :PayServices ) {
 		PayService& service = *servicePtr;
-		outputFile << service.getName() << " " << service.getavailibility() << " " << service.getCost() << endl;
+		outputFile << service.getNameService() << " " << service.getavailibility() << " " << service.getCost() << endl;
 		
 	}
 	outputFile.close();
@@ -20,11 +20,11 @@ vector<shared_ptr<PayService>> role::Visitor::readPayServiceFromFIle()
 	vector<shared_ptr<PayService>> PayServices;
 	ifstream inFile(filename);
 	if (inFile.is_open()) {
-		string name;
+		string nameService;
 		char availability;
 		double Cost;
-		while (inFile >> name >> availability >> Cost) {
-			shared_ptr<PayService> service = make_shared<PayService>( name, availability,Cost);
+		while (inFile >> nameService>> availability >> Cost) {
+			shared_ptr<PayService> service = make_shared<PayService>(nameService, availability, Cost);
 			PayServices.push_back(service);
 		}
 		inFile.close();
@@ -33,14 +33,17 @@ vector<shared_ptr<PayService>> role::Visitor::readPayServiceFromFIle()
 		cerr << "Невозможно открыть файл " << filename << endl;
 	}
 	return PayServices;
+	
 }
+
+
 void role::Visitor::printPayServiceTable(vector<shared_ptr<PayService>>& PayServices)
 {
-	cout << "--------------------------------" << endl;
-	std::cout << "|" << setw(3) << "№" << "|" << std::setw(17) << "Название услуги" << " | "
+	cout << "----------------------------------------------------------" << endl;
+	std::cout << "|" << setw(3) << "№" << "|" << std::setw(30) << "Название услуги" << " | "
 		<< std::setw(5) << "Налич." << " | " << setw(10) << "Цена" << "|"
 		<< endl;
-	cout << "--------------------------------" << endl;
+	cout << "----------------------------------------------------------" << endl;
 	int i = 0;
 	for (const auto& payservicePtr : PayServices) {
 		payservicePtr->show(i);
@@ -48,33 +51,35 @@ void role::Visitor::printPayServiceTable(vector<shared_ptr<PayService>>& PayServ
 	}
 }
 void PayService::show(int i) {
-	std::cout << "|" << setw(3) << ++i << "|" << std::setw(17) << getName()<< " | "
-		<< std::setw(5) << getavailibility()<< " | "<<setw(10)<<getCost()<<"|"
+	std::cout << "|" << setw(3) << ++i << "|" << std::setw(30) << getNameService()<< " | "
+		<< std::setw(6) << getavailibility()<< " | "<<setw(10)<<getCost()<<"|"
 		<< endl;
-	cout << "--------------------------------" << endl;
+	cout << "----------------------------------------------------------" << endl;
 }
 
 void Admin::addPayService() {
+
 	cout << "Добавить новую услугу" << endl;
 	vector<shared_ptr<PayService>> PayServices = readPayServiceFromFIle();
 
 
 	// Запрос данных для новой услуги у пользователя
-	string name;
+	string nameService;
 	char availability;
 	double cost;
 
-	cout << "Введите имя новой услуги: ";
-	cin >> name;
+	cout << "Введите имя новой услуги: " << endl;
+	cin.ignore();
+	getline(cin, nameService);
 
-	cout << "Введите доступность новой услуги ('Y' или 'N'): ";
+	cout << "Введите доступность новой услуги ('+' или '-'): "<<endl;
 	cin >> availability;
-
-	cout << "Введите стоимость новой услуги: ";
+	cin.ignore((numeric_limits<streamsize>::max)(), '\n');
+	cout << "Введите стоимость новой услуги: "<<endl;
 	cin >> cost;
 
 	// Создание нового объекта PayService и добавление его в вектор
-	shared_ptr<PayService> newService = make_shared<PayService>(name, availability, cost);
+	shared_ptr<PayService> newService = make_shared<PayService>(nameService, availability, cost);
 	PayServices.push_back(newService);
 
 	// Сохранение обновленного списка услуг в файл
@@ -108,12 +113,16 @@ void role::Admin::editPayService()
 {
 	vector<shared_ptr<PayService>> PayServices = readPayServiceFromFIle();
 	printPayServiceTable(PayServices);
-	int i = 0; int choice, number_for_edit;
-	string name;
+
+	int number_for_edit;
+	cout << "Введите номер услуги, которую хотите изменить: ";
+	cin >> number_for_edit;
+
+	int choice;
+	string nameService;
 	char availability;
 	double cost;
-	cout << "Введите номер аккаунта который хотите изменить: " << endl;
-	cin >> number_for_edit;
+
 	cout << "--------------ВВЕДИТЕ--------------" << endl;
 	cout << "1-чтобы изменить название услуги" << endl;
 	cout << "2-чтобы изменить наличие" << endl;
@@ -121,12 +130,16 @@ void role::Admin::editPayService()
 	cout << "4-чтобы выйти из режима редактирования" << endl;
 	cout << "Ваш выбор: ";
 	cin >> choice;
+
+	// Очищаем буфер после ввода числа choice
+	cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
 	switch (choice) {
 	case 1: {
 		cout << endl << "--Новое название--" << endl;
-		cin >> name;
-		PayServices.at(number_for_edit - 1)->setName(name);
-		cout << "--Название успешно изменены--" << endl;
+		getline(cin, nameService);
+		PayServices.at(number_for_edit - 1)->setName(nameService);
+		cout << "--Название успешно изменено--" << endl;
 		break;
 	}
 	case 2: {
@@ -147,26 +160,27 @@ void role::Admin::editPayService()
 		return;
 	}
 	}
+	writePayServiceToFile(PayServices);
 }
 void User::findPayService() {
 	vector<shared_ptr<PayService>> PayServices = readPayServiceFromFIle();
-	string name;
+	string nameService;
 	int count = 0;
 	cout << "---Поиск---" << endl;
 	cout << "Введите название услуги: ";
-	cin >> name;
+	cin >> nameService;
 	for (int i = 0; i < PayServices.size(); i++) {
-		if (PayServices.at(i)->getName() == name) {
+		if (PayServices.at(i)->getNameService() == nameService) {
 			count++;
-			cout << "--------------------------------" << endl;
-			std::cout << "|" << setw(3) << "№" << "|" << std::setw(17) << "Название услуги" << " | "
+			cout << "----------------------------------------------------------" << endl;
+			std::cout << "|" << setw(3) << "№" << "|" << std::setw(30) << "Название услуги" << " | "
 				<< std::setw(5) << "Налич." << " | " << setw(10) << "Цена" << "|"
 				<< endl;
-			cout << "--------------------------------" << endl;
-			std::cout << "|" << setw(3) << ++i << "|" << std::setw(17) << PayServices.at(i)->getName() << " | "
-				<< std::setw(5) << PayServices.at(i)->getavailibility() << " | " << setw(10) << PayServices.at(i)->getCost() << "|"
+			cout << "----------------------------------------------------------" << endl;
+			std::cout << "|" << setw(3) << ++i << "|" << std::setw(30) << PayServices.at(i-1)->getNameService() << " | "
+				<< std::setw(6) << PayServices.at(i-1)->getavailibility() << " | " << setw(10) << PayServices.at(i-1)->getCost() << "|"
 				<< endl;
-			cout << "--------------------------------" << endl;
+			cout << "----------------------------------------------------------" << endl;
 		}
 	}
 	if (count == 0) {
@@ -188,3 +202,159 @@ void role::User::sortPayService()
 	cout << "--Успешно отсортировано--" << endl;
 	printPayServiceTable(PayServices_temp);
 }
+void DecoratedService::writeDecoratedServicesToFile(vector<DecoratedService>& decoratedServices) {
+	string filename = "decorated_services.txt";
+	ofstream outputFile(filename);
+	if (!outputFile.is_open()) {
+		std::cerr << "Ошибка открытия файла \"" << filename << "\" для записи." << std::endl;
+		return;
+	}
+
+	for (DecoratedService& decoratedService : decoratedServices) {
+		outputFile << decoratedService.user.getSurname() << " "
+			<< decoratedService.user.getName() << " "
+			<< decoratedService.user.getPatronymic() << " "
+			<< decoratedService.payService.getNameService() << " "
+			<< decoratedService.payService.getCost() << endl;
+	}
+
+	outputFile.close();
+}
+
+vector<DecoratedService> DecoratedService::readDecoratedServiceFromFile()
+{
+	string filename = "decorated_services.txt";
+	vector<DecoratedService> decoratedServices;
+	ifstream inFile(filename);
+	if (inFile.is_open()) {
+		string surname,name,patronymic,nameService;
+		double Cost;
+		while (inFile >>surname>>name>>patronymic>> nameService  >> Cost) {
+			decoratedServices.push_back(DecoratedService{ surname,name,patronymic,nameService,Cost });
+		}
+		inFile.close();
+	}
+	else {
+		cerr << "Невозможно открыть файл " << filename << endl;
+	}
+	return decoratedServices;
+}
+
+void DecoratedService::printDecoratedServiceTable(vector<DecoratedService>& decoratedService)
+{
+	cout << "-------------------------------------------------------------------------------" << endl;
+	cout << "|" << setw(3) << "№" <<"|" << setw(15) << "Фамилия" << "|" << setw(10) << "Имя" << "|" << setw(17) << "Отчество" << "|" << setw(17) << "Название услуги" << "|" << setw(10) << "Цена" << "|" << endl;
+	cout << "-------------------------------------------------------------------------------" << endl;
+	int i = 0;
+	for (auto& decoratedservice : decoratedService) {
+		cout << "|" << setw(3) << ++i <<"|" << setw(15) << decoratedservice.user.getSurname() << "|" << setw(10) <<	decoratedservice.user.getName()<< "|" << setw(17)
+			<< decoratedservice.user.getPatronymic() << "|" << setw(17) << decoratedservice.payService.getNameService() << "|" << setw(10) << decoratedservice.payService.getCost() << "|" << endl;
+		cout << "-------------------------------------------------------------------------------" << endl;
+	}
+}
+
+void DecoratedService::issueService(User& currentUser)
+{
+	cout << "-Бронирование услуг-" << endl;
+
+	// Чтение существующих оформленных услуг из файла
+	vector<DecoratedService> decoratedService = readDecoratedServiceFromFile();
+
+	// Чтение доступных платных услуг из файла
+	vector<shared_ptr<PayService>> payServices = currentUser.readPayServiceFromFIle();
+
+	// Вывод доступных платных услуг для выбора пользователем
+	currentUser.printPayServiceTable(payServices);
+
+	int choice;
+	int count = 0;
+
+	// Пользователь выбирает услугу для бронирования
+	cout << "Введите номер услуги, которую хотите забронировать: ";
+	cin >> choice;
+
+	// Проверка корректности выбора пользователя
+	if (choice < 1 || choice > payServices.size()) {
+		cout << "Некорректный выбор услуги." << endl;
+		return;
+	}
+	
+	// Получение выбранной платной услуги
+	shared_ptr<PayService> selectedService = payServices[choice - 1];
+	if (selectedService->getavailibility() == '-') {
+		cout << "Данной услуги нет в наличии" << endl;
+	}
+	else {
+
+		// Создание объекта DecoratedService и добавление его в вектор
+		decoratedService.push_back(DecoratedService{ currentUser.getSurname(), currentUser.getName(), currentUser.getPatronymic(), selectedService->getNameService(), selectedService->getCost() });
+
+		// Запись обновленных данных об оформленных услугах в файл
+		writeDecoratedServicesToFile(decoratedService);
+
+		cout << "--Бронирование прошло успешно--" << endl;
+	}
+}
+
+void DecoratedService::deleteDecoratedService()
+{
+
+	vector<DecoratedService> decoratedServices = readDecoratedServiceFromFile();
+	printDecoratedServiceTable(decoratedServices);
+
+	cout << "----УДАЛЕНИЕ УСЛУГИ----" << endl << endl;
+	cout << "Введите номер услуги, которую хотите удалить: ";
+	int number_for_delete;
+	cin >> number_for_delete;
+
+	// Проверяем корректность номера для удаления
+	if (number_for_delete < 1 || number_for_delete > decoratedServices.size()) {
+		cout << "Некорректный номер услуги для удаления." << endl;
+		return;
+	}
+
+	cout << "Вы уверены, что хотите удалить эту услугу?" << endl;
+	cout << "1. Да" << endl << "2. Нет" << endl;
+
+	int yes_or_no;
+	cin >> yes_or_no;
+
+	if (yes_or_no == 1) {
+		// Используем decoratedServices.erase для удаления элемента по указанному индексу
+		decoratedServices.erase(decoratedServices.begin() + number_for_delete - 1);
+		cout << "----Услуга успешно удалена----" << endl;
+
+		// Перезаписываем обновленные данные в файл
+		writeDecoratedServicesToFile(decoratedServices);
+	}
+	else {
+		cout << "Вы отменили удаление." << endl;
+	}
+}
+
+void DecoratedService::watchUserDecoratedService(string surname, string name, string patronymic)
+{
+	int count = 0;
+	vector<DecoratedService> decoratedService = readDecoratedServiceFromFile();
+	int i = 0;
+	cout << "-------------------------------------------------------------------------------" << endl;
+	cout << "|" << setw(3) << "№" << "|" << setw(15) << "Фамилия" << "|" << setw(10) << "Имя" << "|" << setw(17) << "Отчество" << "|" << setw(17) << "Название услуги" << "|" << setw(10) << "Цена" << "|" << endl;
+	cout << "-------------------------------------------------------------------------------" << endl;
+	for (auto& decorservice : decoratedService) {
+		
+		if (decorservice.user.getSurname() == surname && decorservice.user.getName() == name && decorservice.user.getPatronymic()==patronymic) {
+			count++;
+			
+				cout << "|" << setw(3) << ++i << "|" << setw(15) << decorservice.user.getSurname() << "|" << setw(10) << decorservice.user.getName() << "|" << setw(17)
+					<< decorservice.user.getPatronymic() << "|" << setw(17) << decorservice.payService.getNameService() << "|" << setw(10) << decorservice.payService.getCost() << "|" << endl;
+				cout << "-------------------------------------------------------------------------------" << endl;
+			
+			}
+	}
+	if (count == 0) {
+		cout<<"У вас нет забронированных услуг"<<endl;
+	}
+}
+
+
+

@@ -1,9 +1,10 @@
 #include "Header.h"
 using namespace role;
 void Authentication::menu_workwithaccount() {
+	system("cls");
 	while (true) {
-		
-		cout << "МЕНЮ РАБОТЫ С УЧЁТНЫМИ ЗАПИСЯМИ" << endl;
+
+		cout << "-МЕНЮ РАБОТЫ С УЧЁТНЫМИ ЗАПИСЯМИ-" << endl;
 		int choice;
 		cout << "\n Введите: " << endl;
 		cout << "1 - для просмотра учётных записей администраторов" << endl;
@@ -20,73 +21,81 @@ void Authentication::menu_workwithaccount() {
 		cin >> choice;
 		switch (choice) {
 		case 1: {
-			cout << "Просмотр учётных записей администраторов" << endl;
+			system("cls");
+			cout << "---Просмотр учётных записей администраторов---" << endl;
 			vector<Account> accounts_admin = readFromFileAccountsAdmins();
 			printAdminAccountTable(accounts_admin);
 			break;
 		}
 		case 2: {
-			cout << "Просмотр учётных записей пользователей" << endl;
+			system("cls");
+			cout << "---Просмотр учётных записей пользователей---" << endl;
 			vector<Account> accounts_user = readFromFileAccountsUser();
 			printUserAccountTable(accounts_user);
 			break;
 		}
 		case 3: {
-			cout << "Просмотр данных администраторов" << endl;
-			vector<Admin>admins =readFromFileAdmins();
+			system("cls");
+			cout << "----Просмотр данных администраторов----" << endl;
+			vector<Admin>admins = readFromFileAdmins();
 			printAdminDataTable(admins);
 			break;
 		}
 		case 4: {
-			cout << "Просмотр данных пользователей" << endl;
+			system("cls");
+			cout << "----Просмотр данных пользователей----" << endl;
 			vector<User> users = readFromFileUsers();
 			printUserDataTable(users);
 			break;
 
 		}
-		case 5:{		   
-			cout << "Подтверждение заявок на регистрацию" << endl;
+		case 5: {
+			cout << "----Подтверждение заявок на регистрацию----" << endl;
 			approve();
 			break;
 		}
 		case 6: {
-			cout << "Добавление учётной записи администратора" << endl;
+			system("cls");
+			cout << "---Добавление учётной записи администратора---" << endl;
 			addAdminAccount();
 			break;
 		}
 		case 7: {
-			cout << "Добавление учётной записи пользователя" << endl;
+			system("cls");
+			cout << "---Добавление учётной записи пользователя---" << endl;
 			addUserAccount();
 			break;
 		}
 		case 8: {
+			system("cls");
 			int choice1;
 			cout << "Выберите:\n 1 - Редактирование учётной записи адинистратора\n 2 - Редактирование учётной записи пользователя" << endl;
 			cin >> choice1;
-			if (choice1 == 1) { cout << "Редактирование учётной записи адинистратора" << endl; editAdminAccount(); break; }
-			if (choice1 == 2) { cout << "Редактирование учётной записи пользователя" << endl; editUserAccount(); break; }
+			if (choice1 == 1) { cout << "Редактирование учётной записи адинистратора" << endl; system("cls"); editAdminAccount(); break; }
+			if (choice1 == 2) { cout << "Редактирование учётной записи пользователя" << endl; system("cls"); editUserAccount(); break; }
 			else {
 				return;
 			}
 			break;
 		}
 		case 9: {
+			system("cls");
 			int choice2;
 			cout << "Выберите:\n 1 - Удаление учётной записи адинистратора\n 2 - Удаление учётной записи пользователя" << endl;
 			cin >> choice2;
-			if (choice2 == 1) { cout << "Удаление учётной записи адинистратора" << endl; deleteAdminAccount(currentAdmin.getLogin()); break; }
-			if (choice2 == 2) { cout << "Удаление учётной записи пользователя" << endl; deleteUserAccount(); break; }
+			if (choice2 == 1) { cout << "Удаление учётной записи адинистратора" << endl; system("cls"); deleteAdminAccount(currentAdmin.getLogin()); break; }
+			if (choice2 == 2) { cout << "Удаление учётной записи пользователя" << endl; system("cls"); deleteUserAccount(); break; }
 			else {
 				return;
 			}
 			break;
 		}
-		case 10:{
+		case 10: {
 			return;
-			  }
+		}
 		}
 	}
-}
+};
 
 void Admin::menu_workwithdata()
 {
@@ -101,12 +110,13 @@ void Admin::menu_workwithdata()
 		cin >> choice;
 		switch (choice) {
 		case 1: {
-			cout << "Работа с расписанием" << endl;
+			system("cls");
 			menu_workwithschedule();
 			break;
 		}
 		case 2: {
-			cout << "Работа с услугами" << endl;
+			system("cls");
+			menu_workwithservice();
 			break;
 		}
 		case 3: {
@@ -119,6 +129,7 @@ void Admin::menu_workwithdata()
 void Admin::menu_workwithschedule()
 {
 	while (true) {
+		system("cls");
 		cout << "МЕНЮ РАБОТЫ С РАСПИСАНИЕМ" << endl;
 		int choice;
 		cout << "\n Введите: " << endl;
@@ -135,42 +146,128 @@ void Admin::menu_workwithschedule()
 			break;
 		}
 		case 2: {
+			system("cls");
 			int choice1;
 			cout << "Редактирование расписания" << endl;
-			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\n " << endl;
+			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\nлюбая цифра - выход" << endl;
 			cin >> choice1;
 			if (choice1 == 1) { cout << "Редактирование расписания вылетов" << endl; editDepartureFlight(); break; }
 			if (choice1 == 2) { cout << "Редактирование расписания прилётов" << endl; editArrivalFlight(); break; }
 			else {
+				system("cls");
 				return;
 			}
 			break;
 		}
 		case 3: {
+			system("cls");
 			int choice2;
 			cout << "Добавление расписания" << endl;
-			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\n " << endl;
+			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\nлюбая цифра - выход " << endl;
 			cin >> choice2;
 			if (choice2 == 1) { cout << "Добавления расписания вылетов" << endl; addDepartureFlight(); break; }
 			if (choice2 == 2) { cout << "Добавление расписания прилётов" << endl; addArrivalFlight(); break; }
 			else {
+				system("cls");
 				return;
 			}
 			break;
 		}
 		case 4: {
+			system("cls");
 			int choice3;
 			cout << "Удаление расписания" << endl;
-			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\n " << endl;
+			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\nлюбая цифра - выход " << endl;
 			cin >> choice3;
 			if (choice3 == 1) { cout << "Удаление расписания вылетов" << endl; deleteDepartureFlight(); break; }
 			if (choice3 == 2) { cout << "Удаление расписания прилётов" << endl; deleteArrivalFlight(); break; }
 			else {
+				system("cls");
 				return;
 			}
 			break;
 		}
 		case 5: {
+			return;
+		}
+		}
+	}
+}
+void role::Admin::menu_workwithservice()
+{
+	system("cls");
+	User user;
+	DecoratedService decorService;
+	while (true) {
+		cout << "МЕНЮ РАБОТЫ С УСЛУГАМИ" << endl;
+		int choice;
+		cout << "\n Введите: " << endl;
+		cout << "1 - для просмотра услуг, предоставляемых аэропортом" << endl;
+		cout << "2 - для добавления услуг" << endl;
+		cout << "3 - для редактирования услуг" << endl;
+		cout << "4 - для удаления услуг" << endl;
+		cout << "5 - для поиска услуг" << endl;
+		cout << "6 - для сортировки услуг" << endl;
+		cout << "7 - для просмотра брони на услуги" << endl;
+		cout << "8 - для удаления брони на услуги" << endl;
+		cout << "9 - для выхода" << endl;
+		cout << "Ваш выбор: ";
+		cin >> choice;
+		switch (choice) {
+		case 1: {
+			system("cls");
+			cout << "--УСЛУГИ ПРЕДОСТАВЛЯЕМЫЕ АЭРОПОРТОМ---" << endl;
+			vector<shared_ptr<PayService>> PayServices = readPayServiceFromFIle();
+			printPayServiceTable(PayServices);
+			break;
+		}
+		case 2: {
+			system("cls");
+			cout << "--ДОБАВЛЕНИЕ УСЛУГ---" << endl;
+			addPayService();
+			break;
+		}
+		case 3: {
+			system("cls");
+			cout << "--РЕДАКТИРОВАНИЕ УСЛУГ---" << endl;
+			editPayService();
+			break;
+		}
+		case 4: {
+			system("cls");
+			cout << "--УДАЛЕНИЕ УСЛУГ---" << endl;
+			deletePayService();
+			break;
+		}
+		case 5: {
+			system("cls");
+			cout << "---ПОИСК УСЛУГ---" << endl;
+			user.findPayService();
+			break;
+		}
+		case 6: {
+			system("cls");
+			cout << "---СОРТИРОВКА УСЛУГ ПО ЦЕНЕ---" << endl;
+			user.sortPayService();
+			break;
+		}
+		case 7: {
+			system("cls");
+			cout << "---ПРОСМОТР ЗАБРОНИРОВАННЫХ УСЛУГ---" << endl;
+			vector<DecoratedService> decoratedService = decorService.readDecoratedServiceFromFile();
+			decorService.printDecoratedServiceTable(decoratedService);
+			break;
+		}
+		case 8: {
+			system("cls");
+			cout << "---УДАЛИТЬ БРОНЬ НА УСЛУГУ---" << endl;
+			decorService.deleteDecoratedService();
+			Sleep(3000);
+			system("cls");
+			break;
+		}
+		case 9: {
+			system("cls");
 			return;
 		}
 		}
@@ -296,6 +393,7 @@ void role::Authentication::approve()
 		break;
 	}
 	case 2: {
+		system("cls");
 		return;
 	}
 	}
@@ -446,8 +544,11 @@ void Authentication::editAdminAccount()
 
 	cout << "Введите номер аккаунта у которого хотите изменить логин и пароль, 0 - для выхода: " << endl;
 	cin >> number_for_edit;
-
-	if (number_for_edit >= 1 && number_for_edit <= number_of_admins) {
+	if (number_for_edit == 0) {
+		system("cls");
+		return;
+	}
+	else if (number_for_edit >= 1 && number_for_edit <= number_of_admins) {
 		cout << endl << "--Новый логин--" << endl;
 		cin >> login;
 		cout<< "--Новый пароль--" << endl;
@@ -518,7 +619,7 @@ void Authentication::editUserAccount()
 		accounts_user.at(number_for_edit - 1).SetLogin(login);
 		accounts_user.at(number_for_edit - 1).SetPassword(password);
 		users.at(number_for_edit - 1).SetPassword(password);
-		users.at(number_for_edit - 1).getLogin() = login;
+		users.at(number_for_edit - 1).SetLogin(login);
 		saveToFileAccountUser(accounts_user);
 		saveToFileUser(users);
 		cout << "--Логин и пароль успешно изменены--" << endl;
@@ -550,12 +651,13 @@ void Authentication::editUserAccount()
 		cout << "--номер успешно изменен--" << endl;
 		break;
 	}
-	case 4: {
+	case 4: 
+		system("cls");
 		return;
 	}
-	}
-
-
 }
+
+
+
 
 
