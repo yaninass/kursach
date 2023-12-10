@@ -13,7 +13,7 @@ void Authentication::registerUser() {
 		cout << "Введите логин" << endl;
 		cin >> login;
 		cout << "Придумайте пароль" << endl;
-		cin >> password;
+		password=check::checkSize();
 		if (checkLoginAndPasswordRegist(accounts_user, login, password)) {
 			break;
 		}
@@ -21,16 +21,16 @@ void Authentication::registerUser() {
 	newUser.SetLogin(login);
 	newUser.SetPassword(password);
 	cout << "Введите фамилию" << endl;
-	cin >> surname;
+	surname=check::checkString();
 	newUser.setSurname(surname);
 	cout << "Введите имя" << endl;
-	cin >> name;
+	name=check::checkString();
 	newUser.setName(name);
 	cout << "Введите отчество" << endl;
-	cin >> patronymic;
+	patronymic=check::checkString();
 	newUser.setPatronymic(patronymic);
 	cout << "Введите идентификационный номер паспорта" << endl;
-	cin >> identNumber;
+	identNumber=check::inputNumber(10000000,99999999);
 	newUser.setIdentNumber(identNumber);
 	Account newAccount(login, password);
 	accounts_user.push_back(newAccount);
@@ -57,13 +57,13 @@ void Authentication::registerAdmin()
 		cout << "Введите логин" << endl;
 		cin >> login;
 		cout << "Придумайте пароль" << endl;
-		cin >> password;
+		password=check::checkSize();
 		if (checkLoginAndPasswordRegist(accounts_admin, login, password)) {
 			break;
 		}
 	}
 	cout << "Введите номер сотрудника" << endl;
-	cin >> numberAdmin;
+	numberAdmin=check::inputNumber(1,100);
 	Admin newAdmin(login, password, numberAdmin);
 	admins_to_aprove.push_back(newAdmin);
 	saveToFileAccount(admins_to_aprove);
@@ -124,7 +124,7 @@ void Authentication::start_menu()
 		int choice;
 		cout << "-------Введите-------- \n 1-для регистрации \n 2-для авторизации \n 3-просмотреть расписание \n 4-посмотреть услуги, предоставляемые аэропортом\n 5-для выхода\n ";
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice=check::inputNumber(1,5);
 
 		switch (choice) {
 		case 1: {
@@ -138,7 +138,6 @@ void Authentication::start_menu()
 			break;
 		}
 		case 3: {
-			Visitor visitor;
 			visitor.menu_schedule();
 			break;
 		}
@@ -161,7 +160,7 @@ void role::Visitor::watchService(){
 	user.printPayServiceTable(PayServices);
 	int choice_exit;
 	cout << endl << "Введите 1 для выхода\n";
-	cin >> choice_exit;
+	choice_exit=check::inputNumber(1,1);
 	if (choice_exit == 1) {
 		return;
 	}
@@ -173,7 +172,7 @@ void Authentication::menu_registration()
 		int choice;
 		cout << "-------Введите-------- \n 1-для регистрации админа \n 2-для регистрации пользователя \n 3-для выхода \n";
 
-		cin >> choice;
+		choice=check::inputNumber(1,3);
 		switch (choice) {
 		case 1: {
 			system("cls");
@@ -209,7 +208,7 @@ void Authentication::menu_admin()
 		cout << "2 - для работы с данными" << endl;
 		cout << "3 - для выхода" << endl;
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice=check::inputNumber(1,3);
 		switch (choice) {
 		case 1: {
 			system("cls");
@@ -247,7 +246,7 @@ void Authentication::menu_user(User& currentUser)
 		cout << "6 - для сортировки услуги" << endl;
 		cout << "7 - для выхода" << endl;
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice=check::inputNumber(1,7);
 		switch (choice) {
 		case 1: {
 			visitor.menu_schedule();

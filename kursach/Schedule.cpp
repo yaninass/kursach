@@ -9,7 +9,7 @@ void Visitor:: menu_schedule()
 		vector<DepartureSchedule> DepartureFlights = readDepartureSchedulefromFile();
 		vector<ArrivalSchedule> ArrivalFlights = readArrivalSchedulefromFile();
 		cout << "-------Введите-------- \n 1-для просмотра расписания вылетов \n 2-для просмотра расписания прилётов \n 3-для выхода\n ";
-		cin >> choice;
+		choice=check::inputNumber(1,3);
 		switch (choice) {
 		case 1: {
 			cout << "Расписание вылетов" << endl;
@@ -166,24 +166,24 @@ void Admin::addDepartureFlight()
 	string  Destination, status, time, ReceptionDesk, DepartureGate;
 	while (true) {
 		cout << "Введите номер рейса: ";
-		cin >> numberFlight;
+		numberFlight=check::inputNumber(100,999);
 		cout << "Введите дату вылета: ";
 		cout << "Введите день вылета: ";
-		cin >> day;
+		day=check::inputNumber(1,31);
 		cout << "Введите месяц вылета: ";
-		cin >> month;
+		month=check::inputNumber(1,12);
 		cout << "Введите год вылета: ";
-		cin >> year;
+		year=check::inputNumber(1979,2024);
 		cout << "Введите пункт: ";
-		cin >> Destination;
+		Destination=check::checkString();
 		cout << "Введите статус рейса: ";
-		cin >> status;
+		status=check::checkStatus();
 		cout << "Введите время: ";
 		cin >> time;
 		cout << "Введите стойку регистрации ";
-		cin >> ReceptionDesk;
+		ReceptionDesk=check::inputNumber(1,20);
 		cout << "Введите выход на посадку: ";
-		cin >> DepartureGate;
+		DepartureGate=check::inputNumber(1,20);
 		break;
 	}
 	DepartureSchedule DepartureFlight;
@@ -207,22 +207,22 @@ void Admin::addArrivalFlight()
 	string  Destination, status, time, LaggageBelt;
 	while (true) {
 		cout << "Введите номер рейса: ";
-		cin >> numberFlight;
+		numberFlight=check::inputNumber(100,999);
 		cout << "Введите дату вылета: ";
 		cout << "Введите день вылета: ";
-		cin >> day;
+		day=check::inputNumber(1,31);
 		cout << "Введите месяц вылета: ";
-		cin >> month;
+		month=check::inputNumber(1,12);
 		cout << "Введите год вылета: ";
-		cin >> year;
+		year=check::inputNumber(1979,2024);
 		cout << "Введите пункт: ";
-		cin >> Destination;
+		Destination=check::checkString();
 		cout << "Введите статус рейса: ";
-		cin >> status;
+		status=check::checkStatusArrival();
 		cout << "Введите время: ";
 		cin >> time;
 		cout << "Введите багажную ленту ";
-		cin >> LaggageBelt;
+		LaggageBelt=check::inputNumber(1,10);
 		
 		break;
 	}
@@ -253,13 +253,13 @@ void Admin::editDepartureFlight() {
 		cout << "5-чтобы изменить стойку регистрации и выход на посадку" << endl;
 		cout << "6-чтобы выйти из режима редактирования" << endl;
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice=check::inputNumber(1,6);
 		switch (choice) {
 		case 1: {
 			cout << "--Изменение даты получения--" << endl;
 			int targetFlightNumber;
 			cout << "Введите номер рейса, для которого хотите изменить дату: ";
-			cin >> targetFlightNumber;
+			targetFlightNumber=check::inputNumber(100,999);
 			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
@@ -268,13 +268,13 @@ void Admin::editDepartureFlight() {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новый день: ";
-					cin >> day;
+					day=check::inputNumber(1,31);
 					
 					cout << setw(5) << "Новый месяц: ";
-					cin >> month;
+					month=check::inputNumber(1,12);
 					
 					cout << setw(5) << "Новый год: ";
-					cin >> year;
+					year=check::inputNumber(1979,2024);
 					
 					found = true;
 					departureFlights.at(departureIndex).flights.at(i).setDay(day);
@@ -300,7 +300,7 @@ void Admin::editDepartureFlight() {
 			cout << "--Изменение пункта прибытия--" << endl;
 			int targetFlightNumber;
 			cout << "Введите номер рейса, для которого хотите изменить пункт прибытия: ";
-			cin >> targetFlightNumber;
+			targetFlightNumber=check::inputNumber(100,999);
 			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
@@ -309,7 +309,7 @@ void Admin::editDepartureFlight() {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новый пункт прибытия: ";
-					cin >> destination;
+					destination=check::checkString();
 						departureFlights.at(departureIndex).flights.at(i).setDestination(destination);
 					
 					found = true;
@@ -330,8 +330,7 @@ void Admin::editDepartureFlight() {
 			cout << "--Изменение статуса рейса--" << endl;
 			int targetFlightNumber;
 			cout << "Введите номер рейса, для которого хотите изменить статус рейса: ";
-			cin >> targetFlightNumber;
-			// Поиск рейса по номеру в векторе flights
+			targetFlightNumber = check::inputNumber(100, 999);			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
 			string status;
@@ -339,7 +338,7 @@ void Admin::editDepartureFlight() {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новый статус: ";
-					cin >> status;
+					status=check::checkStatus();
 					departureFlights.at(departureIndex).flights.at(i).setStatus(status);
 					found = true;
 					break;
@@ -360,8 +359,7 @@ void Admin::editDepartureFlight() {
 			cout << "--Изменение времени вылета рейса--" << endl;
 			int targetFlightNumber;
 			cout << "Введите номер рейса, для которого хотите изменить время вылета рейса: ";
-			cin >> targetFlightNumber;
-			// Поиск рейса по номеру в векторе flights
+			targetFlightNumber = check::inputNumber(100, 999);			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
 			string time;
@@ -390,18 +388,17 @@ void Admin::editDepartureFlight() {
 			int targetFlightNumber;
 			string ReceptionDesk, DepartureGate;
 			cout << "Введите номер рейса, для которого хотите изменить стойку регистрации и выход на посадку: ";
-			cin >> targetFlightNumber;
-			// Поиск рейса по номеру в векторе flights
+			targetFlightNumber = check::inputNumber(100, 999);			// Поиск рейса по номеру в векторе flights
 			int departureIndex = number_for_edit - 1;
 			bool found = false;
 			for (size_t i = 0; i < departureFlights.at(departureIndex).flights.size(); ++i) {
 				if (departureFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 					// Найден нужный рейс, изменяем его дату
 					cout << setw(5) << "Новая стойка регистрации: ";
-					cin >> ReceptionDesk;
+					ReceptionDesk=check::inputNumber(1,20);
 					departureFlights.at(departureIndex).setReceptionGate(ReceptionDesk);
 					cout << setw(5) << "Новый выход на посадку : ";
-					cin >>DepartureGate;
+					DepartureGate=check::inputNumber(1,20);
 					departureFlights.at(departureIndex).setDepartureGate(DepartureGate);
 					found = true;
 					break;
@@ -441,14 +438,13 @@ void Admin::editArrivalFlight()
 	cout << "5-чтобы изменить багажную ленту" << endl;
 	cout << "6-чтобы выйти из режима редактирования" << endl;
 	cout << "Ваш выбор: ";
-	cin >> choice;
+	choice=check::inputNumber(1,6);
 	switch (choice) {
 	case 1: {
 		cout << "--Изменение даты прилёта--" << endl;
 		int targetFlightNumber;
 		cout << "Введите номер рейса, для которого хотите изменить дату: ";
-		cin >> targetFlightNumber;
-		// Поиск рейса по номеру в векторе flights
+		targetFlightNumber = check::inputNumber(100, 999);		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
 		int day, month, year;
 		bool found = false;
@@ -456,13 +452,13 @@ void Admin::editArrivalFlight()
 			if (arrivalFlights.at(arrivalIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новый день: ";
-				cin >> day;
+				day=check::inputNumber(1,31);
 				arrivalFlights.at(arrivalIndex).flights.at(i).setDay(day);
 				cout << setw(5) << "Новый месяц: ";
-				cin >> month;
+				month=check::inputNumber(1,12);
 				arrivalFlights.at(arrivalIndex).flights.at(i).setMonth(month);
 				cout << setw(5) << "Новый год: ";
-				cin >> year;
+				year=check::inputNumber(1979,2024);
 				arrivalFlights.at(arrivalIndex).flights.at(i).setYear(year);
 				found = true;
 				break;
@@ -484,8 +480,7 @@ void Admin::editArrivalFlight()
 		cout << "--Изменение пункта вылета--" << endl;
 		int targetFlightNumber;
 		cout << "Введите номер рейса, для которого хотите изменить пункт вылета: ";
-		cin >> targetFlightNumber;
-		// Поиск рейса по номеру в векторе flights
+		targetFlightNumber = check::inputNumber(100, 999);		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
 		bool found = false;
 		string destination;
@@ -493,7 +488,7 @@ void Admin::editArrivalFlight()
 			if (arrivalFlights.at(arrivalIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новый пункт вылета: ";
-				cin >> destination;
+				destination=check::checkString();
 					arrivalFlights.at(arrivalIndex).flights.at(i).setDestination(destination);
 
 				found = true;
@@ -514,8 +509,7 @@ void Admin::editArrivalFlight()
 		cout << "--Изменение статуса рейса--" << endl;
 		int targetFlightNumber;
 		cout << "Введите номер рейса, для которого хотите изменить статус рейса: ";
-		cin >> targetFlightNumber;
-		// Поиск рейса по номеру в векторе flights
+		targetFlightNumber = check::inputNumber(100, 999);		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
 		bool found = false;
 		string status;
@@ -523,7 +517,7 @@ void Admin::editArrivalFlight()
 			if (arrivalFlights.at(arrivalIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новый статус: ";
-				cin >> status;
+				status=check::checkStatusArrival();
 					arrivalFlights.at(arrivalIndex).flights.at(i).setStatus(status);
 				found = true;
 				break;
@@ -544,8 +538,7 @@ void Admin::editArrivalFlight()
 		cout << "--Изменение времени прилёта рейса--" << endl;
 		int targetFlightNumber;
 		cout << "Введите номер рейса, для которого хотите изменить время прилёта рейса: ";
-		cin >> targetFlightNumber;
-		// Поиск рейса по номеру в векторе flights
+		targetFlightNumber = check::inputNumber(100, 999);		// Поиск рейса по номеру в векторе flights
 		int arrivalIndex = number_for_edit - 1;
 		bool found = false;
 		string time;
@@ -574,15 +567,14 @@ void Admin::editArrivalFlight()
 		int targetFlightNumber;
 		string LuggageBelt;
 		cout << "Введите номер рейса, для которого хотите изменить багажную ленту: ";
-		cin >> targetFlightNumber;
-		// Поиск рейса по номеру в векторе flights
+		targetFlightNumber = check::inputNumber(100, 999);		// Поиск рейса по номеру в векторе flights
 		int departureIndex = number_for_edit - 1;
 		bool found = false;
 		for (size_t i = 0; i < arrivalFlights.at(departureIndex).flights.size(); ++i) {
 			if (arrivalFlights.at(departureIndex).flights.at(i).GetnumberFlight() == targetFlightNumber) {
 				// Найден нужный рейс, изменяем его дату
 				cout << setw(5) << "Новая багажная лента: ";
-				cin >> LuggageBelt;
+				LuggageBelt=check::inputNumber(1,10);
 				arrivalFlights.at(departureIndex).setLuggageBelt(LuggageBelt);
 				found = true;
 				break;
@@ -613,12 +605,12 @@ void Admin::deleteDepartureFlight()
 	int number_for_delete;
 	cout << "----УДАЛЕНИЕ РЕЙСА ИЗ РАСПИСАНИЯ----" << endl << endl;
 	cout << "Введите номер ,который хотите удалить" << endl;
-	cin >> number_for_delete;
+	number_for_delete=check::inputNumber(1,departureFlights.size());
 	int yes_or_no;
 	cout << "1. Да" << endl
 		<< "2. Нет" << endl
 		<< "Ваш выбор: " << endl;
-	cin>>yes_or_no;
+	yes_or_no=check::inputNumber(1,2);
 	if (yes_or_no == 1) {
 		departureFlights.erase(departureFlights.begin() + number_for_delete - 1);
 		cout << "----Рейс успешно удалён----" << endl;
@@ -635,12 +627,12 @@ void Admin::deleteArrivalFlight()
 	int number_for_delete;
 	cout << "----УДАЛЕНИЕ РЕЙСА ИЗ РАСПИСАНИЯ----" << endl << endl;
 	cout << "Введите номер,который хотите удалить" << endl;
-	cin >> number_for_delete;
+	number_for_delete=check::inputNumber(1,arrivalFlights.size());
 	int yes_or_no;
 	cout << "1. Да" << endl
 		<< "2. Нет" << endl
 		<< "Ваш выбор: " << endl;
-	cin >> yes_or_no;
+	yes_or_no=check::inputNumber(1,2);
 	if (yes_or_no == 1) {
 		arrivalFlights.erase(arrivalFlights.begin() + number_for_delete - 1);
 		cout << "----Рейс успешно удалён----" << endl;

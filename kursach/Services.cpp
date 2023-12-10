@@ -69,14 +69,13 @@ void Admin::addPayService() {
 	double cost;
 
 	cout << "Введите имя новой услуги: " << endl;
-	cin.ignore();
-	getline(cin, nameService);
+	nameService=check::checkString();
 
 	cout << "Введите доступность новой услуги ('+' или '-'): "<<endl;
-	cin >> availability;
-	cin.ignore((numeric_limits<streamsize>::max)(), '\n');
+	availability=check::checkAvailability();
+	
 	cout << "Введите стоимость новой услуги: "<<endl;
-	cin >> cost;
+	cost=check::checkDoubleInput();
 
 	// Создание нового объекта PayService и добавление его в вектор
 	shared_ptr<PayService> newService = make_shared<PayService>(nameService, availability, cost);
@@ -92,11 +91,11 @@ void Admin:: deletePayService() {
 	int number_for_delete;
 	cout << "----УДАЛЕНИЕ УСЛУГИ----" << endl << endl;
 	cout << "Введите номер услуги, которую хотите удалить: ";
-	cin >> number_for_delete;
+	number_for_delete=check::inputNumber(1,PayServices.size());
 	cout << "Вы уверены, что хотите удалить эту услугу?" << endl;
 	cout << "1. Да" << endl << "2. Нет" << endl;
 	int yes_or_no;
-	cin >> yes_or_no;
+	yes_or_no=check::inputNumber(1,2);
 	if (yes_or_no == 1) {
 
 		PayServices.erase(PayServices.begin() + number_for_delete - 1);
@@ -116,7 +115,7 @@ void role::Admin::editPayService()
 
 	int number_for_edit;
 	cout << "Введите номер услуги, которую хотите изменить: ";
-	cin >> number_for_edit;
+	number_for_edit= check::inputNumber(1, PayServices.size());
 
 	int choice;
 	string nameService;
@@ -129,7 +128,7 @@ void role::Admin::editPayService()
 	cout << "3-чтобы изменить цену" << endl;
 	cout << "4-чтобы выйти из режима редактирования" << endl;
 	cout << "Ваш выбор: ";
-	cin >> choice;
+	choice= check::inputNumber(1,4);
 
 	// Очищаем буфер после ввода числа choice
 	cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
@@ -137,21 +136,21 @@ void role::Admin::editPayService()
 	switch (choice) {
 	case 1: {
 		cout << endl << "--Новое название--" << endl;
-		getline(cin, nameService);
+		nameService=check::checkString();
 		PayServices.at(number_for_edit - 1)->setName(nameService);
 		cout << "--Название успешно изменено--" << endl;
 		break;
 	}
 	case 2: {
 		cout << endl << "--Изменить наличие--" << endl;
-		cin >> availability;
+		availability=check::checkAvailability();
 		PayServices.at(number_for_edit - 1)->setavailability(availability);
 		cout << "--Наличие успешно изменено--" << endl;
 		break;
 	}
 	case 3: {
 		cout << endl << "--Изменить цену--" << endl;
-		cin >> cost;
+		cost=check::checkDoubleInput();
 		PayServices.at(number_for_edit - 1)->setCost(cost);
 		cout << "--Цена успешно изменена--" << endl;
 		break;
@@ -168,7 +167,7 @@ void User::findPayService() {
 	int count = 0;
 	cout << "---Поиск---" << endl;
 	cout << "Введите название услуги: ";
-	cin >> nameService;
+	nameService=check::checkString();
 	for (int i = 0; i < PayServices.size(); i++) {
 		if (PayServices.at(i)->getNameService() == nameService) {
 			count++;
@@ -271,13 +270,9 @@ void DecoratedService::issueService(User& currentUser)
 
 	// Пользователь выбирает услугу для бронирования
 	cout << "Введите номер услуги, которую хотите забронировать: ";
-	cin >> choice;
+	choice=check::inputNumber(1,payServices.size());
 
-	// Проверка корректности выбора пользователя
-	if (choice < 1 || choice > payServices.size()) {
-		cout << "Некорректный выбор услуги." << endl;
-		return;
-	}
+
 	
 	// Получение выбранной платной услуги
 	shared_ptr<PayService> selectedService = payServices[choice - 1];
@@ -305,19 +300,14 @@ void DecoratedService::deleteDecoratedService()
 	cout << "----УДАЛЕНИЕ УСЛУГИ----" << endl << endl;
 	cout << "Введите номер услуги, которую хотите удалить: ";
 	int number_for_delete;
-	cin >> number_for_delete;
+	number_for_delete=check::inputNumber(1,decoratedServices.size());
 
-	// Проверяем корректность номера для удаления
-	if (number_for_delete < 1 || number_for_delete > decoratedServices.size()) {
-		cout << "Некорректный номер услуги для удаления." << endl;
-		return;
-	}
 
 	cout << "Вы уверены, что хотите удалить эту услугу?" << endl;
 	cout << "1. Да" << endl << "2. Нет" << endl;
 
 	int yes_or_no;
-	cin >> yes_or_no;
+	yes_or_no=check::inputNumber(1,2);
 
 	if (yes_or_no == 1) {
 		// Используем decoratedServices.erase для удаления элемента по указанному индексу

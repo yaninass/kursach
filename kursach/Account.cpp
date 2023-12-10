@@ -18,7 +18,7 @@ void Authentication::menu_workwithaccount() {
 		cout << "9 - для удаления учётной записи " << endl;
 		cout << "10 - для выхода" << endl;
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice=check::inputNumber(1,10);
 		switch (choice) {
 		case 1: {
 			system("cls");
@@ -69,8 +69,8 @@ void Authentication::menu_workwithaccount() {
 		case 8: {
 			system("cls");
 			int choice1;
-			cout << "Выберите:\n 1 - Редактирование учётной записи адинистратора\n 2 - Редактирование учётной записи пользователя" << endl;
-			cin >> choice1;
+			cout << "Выберите:\n 1 - Редактирование учётной записи адинистратора\n 2 - Редактирование учётной записи пользователя\n любая цифра - выход" << endl;
+			choice1=check::inputNumbersimple();
 			if (choice1 == 1) { cout << "Редактирование учётной записи адинистратора" << endl; system("cls"); editAdminAccount(); break; }
 			if (choice1 == 2) { cout << "Редактирование учётной записи пользователя" << endl; system("cls"); editUserAccount(); break; }
 			else {
@@ -81,8 +81,8 @@ void Authentication::menu_workwithaccount() {
 		case 9: {
 			system("cls");
 			int choice2;
-			cout << "Выберите:\n 1 - Удаление учётной записи адинистратора\n 2 - Удаление учётной записи пользователя" << endl;
-			cin >> choice2;
+			cout << "Выберите:\n 1 - Удаление учётной записи адинистратора\n 2 - Удаление учётной записи пользователя\n любая цифра - выход" << endl;
+			choice2 = check::inputNumbersimple();
 			if (choice2 == 1) { cout << "Удаление учётной записи адинистратора" << endl; system("cls"); deleteAdminAccount(currentAdmin.getLogin()); break; }
 			if (choice2 == 2) { cout << "Удаление учётной записи пользователя" << endl; system("cls"); deleteUserAccount(); break; }
 			else {
@@ -99,6 +99,7 @@ void Authentication::menu_workwithaccount() {
 
 void Admin::menu_workwithdata()
 {
+	system("cls");
 	while (true) {
 		cout << "МЕНЮ РАБОТЫ С ДАННЫМИ" << endl;
 		int choice;
@@ -107,7 +108,7 @@ void Admin::menu_workwithdata()
 		cout << "2 - для работы с услугами" << endl;
 		cout << "3 - для выхода" << endl;
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice=check::inputNumber(1,3);
 		switch (choice) {
 		case 1: {
 			system("cls");
@@ -139,7 +140,7 @@ void Admin::menu_workwithschedule()
 		cout << "4 - для удаления рейсов из расписания" << endl;
 		cout << "5 - для выхода" << endl;
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice = check::inputNumber(1,5);
 		switch (choice) {
 		case 1: {
 			menu_schedule();
@@ -150,7 +151,7 @@ void Admin::menu_workwithschedule()
 			int choice1;
 			cout << "Редактирование расписания" << endl;
 			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\nлюбая цифра - выход" << endl;
-			cin >> choice1;
+			choice1=check::inputNumbersimple();
 			if (choice1 == 1) { cout << "Редактирование расписания вылетов" << endl; editDepartureFlight(); break; }
 			if (choice1 == 2) { cout << "Редактирование расписания прилётов" << endl; editArrivalFlight(); break; }
 			else {
@@ -164,7 +165,7 @@ void Admin::menu_workwithschedule()
 			int choice2;
 			cout << "Добавление расписания" << endl;
 			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\nлюбая цифра - выход " << endl;
-			cin >> choice2;
+			choice2 = check::inputNumbersimple();
 			if (choice2 == 1) { cout << "Добавления расписания вылетов" << endl; addDepartureFlight(); break; }
 			if (choice2 == 2) { cout << "Добавление расписания прилётов" << endl; addArrivalFlight(); break; }
 			else {
@@ -178,7 +179,7 @@ void Admin::menu_workwithschedule()
 			int choice3;
 			cout << "Удаление расписания" << endl;
 			cout << "Выберите:\n 1 - расписание вылетов\n 2 - расписание прилётов\nлюбая цифра - выход " << endl;
-			cin >> choice3;
+			choice3=check::inputNumbersimple();
 			if (choice3 == 1) { cout << "Удаление расписания вылетов" << endl; deleteDepartureFlight(); break; }
 			if (choice3 == 2) { cout << "Удаление расписания прилётов" << endl; deleteArrivalFlight(); break; }
 			else {
@@ -212,7 +213,7 @@ void role::Admin::menu_workwithservice()
 		cout << "8 - для удаления брони на услуги" << endl;
 		cout << "9 - для выхода" << endl;
 		cout << "Ваш выбор: ";
-		cin >> choice;
+		choice=check::inputNumber(1,9);
 		switch (choice) {
 		case 1: {
 			system("cls");
@@ -372,11 +373,11 @@ void role::Authentication::approve()
 	cout << "---Выберите---" << endl;
 	cout << "1 - для одобрения заявки" << endl;
 	cout << "2 - для выхода" << endl;
-	cin >> choice;
+	choice=check::inputNumber(1,2);
 	switch (choice) {
 	case 1: {
 		cout << "Выберите номер заявки,которую хотите одобрить" << endl;
-		cin>>number_for_add;
+		number_for_add=check::inputNumber(1,admins_to_aprove.size());
 		Account accounts_admins;
 		admin.SetLogin(admins_to_aprove.at(number_for_add - 1).getLogin());
 		accounts_admins.SetLogin(admins_to_aprove.at(number_for_add - 1).getLogin());
@@ -408,11 +409,11 @@ void Authentication::deleteAdminAccount(string login)
 	int number_for_delete;
 	cout<<"----УДАЛЕНИЕ УЧЁТНОЙ ЗАПИСИ----" << endl << endl;
 	cout << "Введите номер аккаунта, который хотите удалить: ";
-	cin >> number_for_delete;
+	number_for_delete=check::inputNumber(1,accounts_admin.size());
 	cout << "Вы уверены, что хотите удалить этот аккаунт?" << endl;
 	cout << "1. Да" << endl << "2. Нет" << endl;
 	int yes_or_no;
-	cin >> yes_or_no;
+	yes_or_no=check::inputNumber(1,2);
 	if (yes_or_no == 1) {
 
 		// Проверка, является ли аккаунт, под которым зашел администратор, тем же, что он пытается удалить
@@ -444,11 +445,11 @@ void Authentication::deleteUserAccount()
 	int number_for_delete;
 	cout << "----УДАЛЕНИЕ УЧЁТНОЙ ЗАПИСИ----" << endl << endl;
 	cout << "Введите номер аккаунта, который хотите удалить: ";
-	cin >> number_for_delete;
+	number_for_delete=check::inputNumber(1,accounts_user.size());
 	cout << "Вы уверены, что хотите удалить этот аккаунт?" << endl;
 	cout << "1. Да" << endl << "2. Нет" << endl;
 	int yes_or_no;
-	cin >> yes_or_no;
+	yes_or_no=check::inputNumber(1,2);
 	if (yes_or_no == 1) {
 		
 			users.erase(users.begin() + number_for_delete - 1);
@@ -474,7 +475,7 @@ void Authentication::addUserAccount()
 		cout << "Введите логин" << endl;
 		cin >> login;
 		cout << "Придумайте пароль" << endl;
-		cin >> password;
+		password=check::checkSize();
 		if (checkLoginAndPasswordRegist(accounts_user, login, password)) {
 			break;
 		}
@@ -482,16 +483,16 @@ void Authentication::addUserAccount()
 	newUser.SetLogin(login);
 	newUser.SetPassword(password);
 	cout << "Введите фамилию" << endl;
-	cin >> surname;
+	surname=check::checkString();
 	newUser.setSurname(surname);
 	cout << "Введите имя" << endl;
-	cin >> name;
+	name=check::checkString();
 	newUser.setName(name);
 	cout << "Введите отчество" << endl;
-	cin >> patronymic;
+	patronymic=check::checkString();
 	newUser.setPatronymic(patronymic);
 	cout << "Введите идентификационный номер паспорта" << endl;
-	cin >> identNumber;
+	identNumber=check::inputNumber(10000000,99999999);
 	newUser.setIdentNumber(identNumber);
 	Account newAccount(login, password);
 	//User newUser(login, password, surname, name, patronymic, identNumber);
@@ -515,13 +516,13 @@ void Authentication::addAdminAccount()
 		cout << "Введите логин" << endl;
 		cin >> login;
 		cout << "Придумайте пароль" << endl;
-		cin >> password;
+		password=check::checkSize();
 		if (checkLoginAndPasswordRegist(accounts_admin, login, password)) {
 			break;
 		}
 	}
 	cout << "Введите номер сотрудника" << endl;
-	cin >> numberAdmin;
+	numberAdmin=check::inputNumber(1,100);
 	Account newAccount(login, password);
 	Admin newAdmin(login, password, numberAdmin);
 	accounts_admin.push_back(newAccount);
@@ -543,7 +544,7 @@ void Authentication::editAdminAccount()
 	string login,password;
 
 	cout << "Введите номер аккаунта у которого хотите изменить логин и пароль, 0 - для выхода: " << endl;
-	cin >> number_for_edit;
+	number_for_edit=check::inputNumber(1,number_of_admins);
 	if (number_for_edit == 0) {
 		system("cls");
 		return;
@@ -552,7 +553,7 @@ void Authentication::editAdminAccount()
 		cout << endl << "--Новый логин--" << endl;
 		cin >> login;
 		cout<< "--Новый пароль--" << endl;
-		cin >> password;
+		password=check::checkSize();
 		// Проверка, что новый логин не занят другим аккаунтом
 		int i = 0;
 		while (i < accounts_admin.size()) {
@@ -594,20 +595,20 @@ void Authentication::editUserAccount()
 	string login,password, surname, name, pathronymic;
 	int identNumber;
 	cout << "Введите номер аккаунта который хотите изменить: " << endl;
-	cin >> number_for_edit;
+	number_for_edit=check::inputNumber(1,accounts_user.size());
 	cout << "--------------ВВЕДИТЕ--------------" << endl;
 	cout << "1-чтобы изменить логин и пароль" << endl;
 	cout << "2-чтобы изменить ФИО" << endl;
 	cout << "3-чтобы редактировать идентификационный номер" << endl;
 	cout << "4-чтобы выйти из режима редактирования" << endl;
 	cout << "Ваш выбор: ";
-	cin >> choice;
+	choice=check::inputNumber(1,4);
 	switch (choice) {
 	case 1: {
 		cout << endl << "--Новый логин--" << endl;
 		cin >> login;
 		cout << "--Новый пароль--" << endl;
-		cin >> password;
+		password=check::checkSize();
 		while (i < accounts_user.size()) {
 			if (accounts_user.at(i).getLogin() == login) {
 				cout << "Данный логин занят, повторите попытку" << endl;
@@ -628,11 +629,11 @@ void Authentication::editUserAccount()
 	case 2: {
 		cout << "--Новое ФИО--" << endl;
 		cout << "Введите фамилию : " << endl;
-		cin >> surname;
+		surname=check::checkString();
 		cout << "Введите имя :" << endl;
-		cin >> name;
+		name=check::checkString();
 		cout << "Введите отчество :" << endl;
-		cin >> pathronymic;
+		pathronymic=check::checkString();
 		users.at(number_for_edit - 1).setSurname(surname);
 		users.at(number_for_edit - 1).setName(name);
 		users.at(number_for_edit - 1).setPatronymic(pathronymic);
@@ -644,7 +645,7 @@ void Authentication::editUserAccount()
 	case 3:{
 		cout << "--Новый номер--" << endl;
 		cout << "Введите номер : " << endl;
-		cin >> identNumber;
+		identNumber=check::inputNumber(10000000,99999999);
 		users.at(number_for_edit - 1).setIdentNumber(identNumber);
 		saveToFileUser(users);
 		saveToFileAccountUser(accounts_user);

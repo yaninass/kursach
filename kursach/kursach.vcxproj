@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
+    <ClCompile Include="Check.cpp" />
     <ClCompile Include="Schedule.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Authentication.cpp" />

@@ -8,7 +8,23 @@
 #include<iomanip>
 #include <conio.h>
 #include<memory>
+#include <limits>
+#include <stdexcept>
 using namespace std;
+class check {
+public:
+    static bool isNumberNumeric();
+	static bool isNumberRangeCorrect(int number, int left_range, int right_range);
+	static int inputNumber(int left_range, int right_range);
+	static int inputNumbersimple();
+    static string checkSize();
+	static string checkString();
+    static string checkStatus();
+	static string checkStatusArrival();
+	static char checkAvailability();
+	static double checkDoubleInput();
+};
+
 class Service {
 protected:
 	string nameService;
